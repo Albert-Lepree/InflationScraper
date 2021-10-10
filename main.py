@@ -2,17 +2,20 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 
 def dataFrame():
     pd.set_option("display.max_rows", 202, "display.max_columns", None) #shows all columns in the dataframes
 
     df = pd.DataFrame(inflation_crawler(), columns=['years', 'InflationRate%']) #creates data frame
     df2 = pd.DataFrame(spx_crawler(), columns=['years', 'SPXROI%'])
+    df3 = pd.DataFrame(btc_crawler(), columns=['years', 'BTCROI%'])
 
     result = pd.merge(df, df2, on='years') #merges the dataframes
+    result = pd.merge(result, df3, on='years')
     print(result)
 
-    result.plot(x='years', y=['InflationRate%', 'SPXROI%'], kind='line') #plots the data
+    result.plot(x='years', y=['InflationRate%', 'SPXROI%', 'BTCROI%'], kind='line') #plots the data
     plt.show()
 
 
@@ -79,13 +82,60 @@ def spx_crawler():
 
 #cisco BTC crawler
 def btc_crawler():
-    url = "https://www.in2013dollars.com/bitcoin-price"
+    pd.set_option("display.max_rows", 202, "display.max_columns", None)  # shows all columns in the dataframes
 
+    url = "https://www.in2013dollars.com/bitcoin-price"
     source_code = requests.get(url)
     plain_text = source_code.text
     soup = BeautifulSoup(plain_text, features="html.parser")
 
-    btc_yearly_table = soup.find('table', {"class": "table table-striped"})
-    print(btc_yearly_table.text)
+    btc_yearly_table = soup.find_all('table', {"class": "table table-striped"})
+    time.sleep(5)
+
+    Years = []
+    annual_change = []
+
+
+
+    for row in btc_yearly_table:
+
+        # Using enumerate so I can use the line count to find 'td'
+        #   tags that contain year or Annual BTC % change.
+        for count, td in enumerate(row.find_all('td')):
+
+            # Grabs Rows with Year Data or Grabs Rows w/ % Change
+            if (count % 4) == 0 or ((count + 1) % 4) == 0:
+
+                # Insert into Year Column in Dataframe
+                if len(td.text) == 4:
+                    Years.append(int(td.text))
+
+                # Insert into Annual % Column in Dataframe
+                else:
+                    tdtext = td.text.replace(',', '')
+                    annual_change.append(float(tdtext))
+
+        break  # Want the for loop to run only once
+
+    for i in range(2009, 1927, -1): #adds non existing years so it can be merged easier
+        Years.append(i)
+        annual_change.append(0)
+
+        num = len(Years) - 1
+
+    for j in range(0, num): #reverses data to be put into dataframe
+
+        if j > (num - j):
+            break
+
+        temp1 = Years[j]
+        temp2 = annual_change[j]
+        Years[j] = Years[num - j]
+        Years[num - j] = temp1
+        annual_change[j] = annual_change[num - j]
+        annual_change[num - j] = temp2
+
+    data = {'years': Years, 'BTCROI%': annual_change}
+    return data
 
 dataFrame()
