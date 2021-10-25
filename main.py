@@ -138,4 +138,3 @@ def btc_crawler():
     data = {'years': Years, 'BTCROI%': annual_change}
     return data
 
-dataFrame()
