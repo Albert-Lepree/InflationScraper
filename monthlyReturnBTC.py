@@ -37,6 +37,7 @@ def monthly_btc_crawler():
     for i in range(1033, 0, -1):
         array.pop(i)
 
+
     for i in range(len(array)-1, 327, -1):
         array.pop(i)
 
@@ -44,6 +45,11 @@ def monthly_btc_crawler():
 
     for i in range(len(array) - 2, 0, -2): # deletes un needed data
         array.pop(i)
+
+    array.pop(0)
+    array.pop(0)
+    array.pop(0)
+    array.pop(0)
 
     ## End Data cleaning
 
@@ -55,6 +61,8 @@ def monthly_btc_crawler():
             month.append(array[i])
         else:
             array[i] = array[i].rstrip((array[i])[-1])  # removes % sign to be converted to float
+            print(array[i])
+            print(i)
             percent.append(float(array[i]))  # adds ROI to list and converts to float
 
     data = {'month' : month, "%return" : percent} # puts data into an array? to be put into data frame
