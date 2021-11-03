@@ -11,6 +11,7 @@ def monthly_btc_crawler():
     plain_text = source_code.text
     soup = BeautifulSoup(plain_text, features="html.parser")
 
+    ## begin Data cleaning: puts the data in a form that can be manipulated easier (ETL)
     soup = str(soup)
     soup = soup.replace(":", '')
     soup = soup.replace("display", '')
@@ -41,22 +42,23 @@ def monthly_btc_crawler():
 
     array.pop(0)
 
-    for i in range(len(array) - 2, 0, -2):
+    for i in range(len(array) - 2, 0, -2): # deletes un needed data
         array.pop(i)
+
+    ## End Data cleaning
 
     month = []
     percent = []
 
-    for i in range(len(array)):
+    for i in range(len(array)): # separates the data into 2 arrays by even or odd index
         if i%2 == 1:
             month.append(array[i])
         else:
             array[i] = array[i].rstrip((array[i])[-1])  # removes % sign to be converted to float
             percent.append(float(array[i]))  # adds ROI to list and converts to float
 
-    data = {'month' : month, "%return" : percent}
-
-    df = pd.DataFrame(data, columns=['month', '%return'])
+    data = {'month' : month, "%return" : percent} # puts data into an array? to be put into data frame
+    df = pd.DataFrame(data, columns=['month', '%return']) #creates dataframe
     print(df)
     df.plot(x='month', y='%return', kind='line') #plots the data
     plt.show()
