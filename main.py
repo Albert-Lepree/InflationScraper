@@ -23,7 +23,7 @@ def inflation_crawler():
     source = "https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1913-" #source of data
     code = requests.get(source) #gets html
     content = code.content #gets content of html
-    soup = BeautifulSoup(content, features="lxml") #cleans html a little bit and sets it up to be parsed
+    soup = BeautifulSoup(content, 'html.parser') #cleans html a little bit and sets it up to be parsed
     dataList = [] #empty list to be filled
     for datas in soup.findAll(style="text-align: center;"): #parses through data adding each value to the list
         dataList.append(datas.string)
@@ -95,8 +95,6 @@ def btc_crawler():
     Years = []
     annual_change = []
 
-
-
     for row in btc_yearly_table:
 
         # Using enumerate so I can use the line count to find 'td'
@@ -138,3 +136,4 @@ def btc_crawler():
     data = {'years': Years, 'BTCROI%': annual_change}
     return data
 
+dataFrame()
