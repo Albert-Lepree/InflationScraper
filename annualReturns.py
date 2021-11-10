@@ -17,6 +17,8 @@ def dataFrame():
 
     result.plot(x='years', y=['InflationRate%', 'SPXROI%', 'BTCROI%'], kind='line') #plots the data
     #plt.show()
+    result.plot(x='years', y=['InflationRate%', 'SPXROI%'], kind='line')
+    #plt.show()
 
 
 def inflation_crawler():
