@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 def merge_and_plot_data():
     pd.set_option("display.max_rows", 202, "display.max_columns", None) #shows all columns in the dataframes
 
-    df = pd.DataFrame(monthly_btc_crawler(), columns=['month', '%return']) #creates data frame
+    df = pd.DataFrame(monthly_btc_crawler(), columns=['month', 'BTCROI%']) #creates data frame
     df2 = pd.DataFrame(percent_change_DXY(), columns=['month', 'DXY%return'])
 
     result = pd.merge(df, df2, on='month') #merges the dataframes
     #print(result)
 
-    result.plot(x='month', y=['%return', 'DXY%return'], kind='line') #plots the data
+    result.plot(x='month', y=['BTCROI%', 'DXY%return'], kind='line') #plots the data
     #plt.show()
 
 def monthly_btc_crawler():
@@ -75,15 +75,12 @@ def monthly_btc_crawler():
 
     ## End Data cleaning
 
-    data = {'month' : month, "%return" : percent} # puts data into an array? to be put into data frame
-    df = pd.DataFrame(data, columns=['month', '%return']) #creates dataframe
-#    print(df)
-#   df.plot(x='month', y='%return', kind='line') #plots the data
-#    plt.show()
+    data = {'month' : month, "BTCROI%" : percent} # puts data into an array? to be put into data frame
+    df = pd.DataFrame(data, columns=['month', 'BTCROI%']) #creates dataframe
+
 
     return data
 
-# monthly_btc_crawler()
 
 def percent_change_DXY():
 
