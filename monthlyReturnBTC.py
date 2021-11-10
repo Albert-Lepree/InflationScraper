@@ -10,10 +10,10 @@ def merge_and_plot_data():
     df2 = pd.DataFrame(percent_change_DXY(), columns=['month', 'DXY%return'])
 
     result = pd.merge(df, df2, on='month') #merges the dataframes
-    print(result)
+    #print(result)
 
     result.plot(x='month', y=['%return', 'DXY%return'], kind='line') #plots the data
-    plt.show()
+    #plt.show()
 
 def monthly_btc_crawler():
     pd.set_option("display.max_rows", 202, "display.max_columns", None)  # shows all columns in the dataframes
@@ -58,12 +58,10 @@ def monthly_btc_crawler():
     for i in range(len(array) - 2, 0, -2): # deletes un needed data
         array.pop(i)
 
+    array.pop(0) #pop bottom 4 indexes because they are un needed
     array.pop(0)
     array.pop(0)
     array.pop(0)
-    array.pop(0)
-
-    ## End Data cleaning
 
     month = []
     percent = []
@@ -75,7 +73,7 @@ def monthly_btc_crawler():
             array[i] = array[i].rstrip((array[i])[-1])  # removes % sign to be converted to float
             percent.append(float(array[i]))  # adds ROI to list and converts to float
 
-    mostAlgo(month, percent)
+    ## End Data cleaning
 
     data = {'month' : month, "%return" : percent} # puts data into an array? to be put into data frame
     df = pd.DataFrame(data, columns=['month', '%return']) #creates dataframe
@@ -114,17 +112,5 @@ def percent_change_DXY():
     data = {'month': DXY_df['month'], "DXY%return": DXY_df['DXY%return']}
 
     return data
-
-## prints the highest return month and percent
-def mostAlgo(time, percent):
-    most = 0.0
-    mostIndex = 0
-
-    for i in range(len(percent)-1): # loops through array comparing each index
-        if percent[i] > most:
-            most = percent[i]
-            mostIndex = i # saves index to select month to be printed
-
-    print(f'The Highest return was {most}% during the month of {time[mostIndex]}.')
 
 merge_and_plot_data()

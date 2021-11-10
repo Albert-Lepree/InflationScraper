@@ -13,10 +13,10 @@ def dataFrame():
 
     result = pd.merge(df, df2, on='years') #merges the dataframes
     result = pd.merge(result, df3, on='years')
-    print(result)
+    #print(result)
 
     result.plot(x='years', y=['InflationRate%', 'SPXROI%', 'BTCROI%'], kind='line') #plots the data
-    plt.show()
+    #plt.show()
 
 
 def inflation_crawler():
