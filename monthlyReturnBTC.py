@@ -3,18 +3,88 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#################################################################
+# Gets the data from each crawler and CSV extractor method and
+# puts it into a dataframe, then plots it in various ways
+#################################################################
 def merge_and_plot_data():
     pd.set_option("display.max_rows", 202, "display.max_columns", None) #shows all columns in the dataframes
 
-    df = pd.DataFrame(monthly_btc_crawler(), columns=['month', 'BTCROI%']) #creates data frame
-    df2 = pd.DataFrame(percent_change_DXY(), columns=['month', 'DXY%return'])
+    df = pd.DataFrame(monthly_btc_crawler(), columns=['month', 'BTCMonthlyChange']) #creates data frame
+    df2 = pd.DataFrame(percent_change_DXY(), columns=['month', 'DXYMonthlyChange'])
 
     result = pd.merge(df, df2, on='month') #merges the dataframes
+
     #print(result)
 
-    result.plot(x='month', y=['BTCROI%', 'DXY%return'], kind='line') #plots the data
+    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange'], kind='line') #plots the data
     #plt.show()
 
+    #violin plot
+    BTCChange = result.BTCMonthlyChange
+    DXYChange = result.DXYMonthlyChange
+
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2)
+
+    # Plot violin plot on axes 1
+    ax1.violinplot(BTCChange, showmedians=True)
+    ax1.set_title('BTC%Change')
+
+    # Plot violin plot on axes 2
+    ax2.violinplot(DXYChange, showmedians=True)
+    ax2.set_title('DXY%Change')
+
+    #plt.show()
+
+#################################################################
+# Converts months such as 'october 2017' to 10/17
+#################################################################
+def month_convertor(months):
+
+    formattedMonths = []
+
+    for i in range(len(months)):
+        year = months[i][-2] + months[i][-1]
+        size = len(months[i])
+        theMonth = months[i][:size - 5]
+        formatted = ''
+        #print(theMonth)
+        if theMonth == 'January':
+            formatted = '1'
+        elif theMonth == 'February':
+            formatted = '2'
+        elif theMonth == 'March':
+            formatted = '3'
+        elif theMonth == 'April':
+            formatted = '4'
+        elif theMonth == 'May':
+            formatted = '5'
+        elif theMonth == 'June':
+            formatted = '6'
+        elif theMonth == 'July':
+            formatted = '7'
+        elif theMonth == 'August':
+            formatted = '8'
+        elif theMonth == 'September':
+            formatted = '9'
+        elif theMonth == 'October':
+            formatted = '10'
+        elif theMonth == 'November':
+            formatted = '11'
+        elif theMonth == 'December':
+            formatted = '12'
+        formatted = formatted + '/' + year
+        formattedMonths.append(formatted)
+
+    #print(formattedMonths)
+
+    return formattedMonths
+
+
+#################################################################
+# Gets monthly percent change in Bitcoin since 2016 and
+# transforms it to be put in the data frame
+#################################################################
 def monthly_btc_crawler():
     pd.set_option("display.max_rows", 202, "display.max_columns", None)  # shows all columns in the dataframes
 
@@ -75,13 +145,15 @@ def monthly_btc_crawler():
 
     ## End Data cleaning
 
-    data = {'month' : month, "BTCROI%" : percent} # puts data into an array? to be put into data frame
-    df = pd.DataFrame(data, columns=['month', 'BTCROI%']) #creates dataframe
+    data = {'month' : month_convertor(month), "BTCMonthlyChange" : percent} # puts data into an array? to be put into data frame
 
 
     return data
 
-
+#################################################################
+# Extracts Data from the 'percentChangeDXY.csv' and transforms it
+# to be put in the data frame
+#################################################################
 def percent_change_DXY():
 
     DXY_df = pd.read_csv('./percentChangeDXY.csv')
@@ -106,7 +178,7 @@ def percent_change_DXY():
 #    plt.xticks(rotation=90)
 #    plt.show()
 
-    data = {'month': DXY_df['month'], "DXY%return": DXY_df['DXY%return']}
+    data = {'month': month_convertor(DXY_df['month']), "DXYMonthlyChange": DXY_df['DXY%return']}
 
     return data
 
