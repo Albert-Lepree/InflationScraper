@@ -3,21 +3,27 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+import dataSortMethods
 
 def dataFrame():
     pd.set_option("display.max_rows", 202, "display.max_columns", None) #shows all columns in the dataframes
 
+    BTCROI = btc_crawler()
+    SPXROI = spx_crawler()
+
+    dataSortMethods.similarityAlgo(BTCROI['BTCROI'], SPXROI['SPXROI']) # compares returns of SPX and BTC by positivity
+
     df = pd.DataFrame(inflation_crawler(), columns=['years', 'InflationRate%']) #creates data frame
-    df2 = pd.DataFrame(spx_crawler(), columns=['years', 'SPXROI%'])
-    df3 = pd.DataFrame(btc_crawler(), columns=['years', 'BTCROI%'])
+    df2 = pd.DataFrame(SPXROI, columns=['years', 'SPXROI'])
+    df3 = pd.DataFrame(BTCROI, columns=['years', 'BTCROI'])
 
     result = pd.merge(df, df2, on='years') #merges the dataframes
     result = pd.merge(result, df3, on='years')
     #print(result)
 
-    result.plot(x='years', y=['InflationRate%', 'SPXROI%', 'BTCROI%'], kind='line') #plots the data
+    result.plot(x='years', y=['InflationRate%', 'SPXROI', 'BTCROI'], kind='line') #plots the data
     #plt.show()
-    result.plot(x='years', y=['InflationRate%', 'SPXROI%'], kind='line')
+    result.plot(x='years', y=['InflationRate%', 'SPXROI'], kind='line')
     #plt.show()
 
 
@@ -80,7 +86,7 @@ def spx_crawler():
         ROI.append(float(allData[i])) #adds ROI to list and converts to float
         years.append(int(allData[i-6])) #adds years to list and converts to int
 
-    spxdata = {"years": years,"SPXROI%": ROI}
+    spxdata = {"years": years,"SPXROI": ROI}
 
     return spxdata
 
@@ -137,7 +143,7 @@ def btc_crawler():
         annual_change[j] = annual_change[num - j]
         annual_change[num - j] = temp2
 
-    data = {'years': Years, 'BTCROI%': annual_change}
+    data = {'years': Years, 'BTCROI': annual_change}
     return data
 
 dataFrame()
