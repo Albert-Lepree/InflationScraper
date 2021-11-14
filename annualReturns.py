@@ -55,14 +55,17 @@ def inflation_crawler():
     return inflationData
 
 def spx_crawler():
+    # EXTRACT
     url = 'https://www.macrotrends.net/2526/sp-500-historical-annual-returns'
     html = requests.get(url)
+
+    # TRANSFORM
     text = html.text
     soup = BeautifulSoup(text, 'html.parser')
     allData = []
-    for datas in soup.findAll('td'):
-        data = datas.string
-        allData.append(data)
+    for datas in soup.findAll('td'): # finds all strings with 'td' tag
+        data = datas.string          # converts from html to string
+        allData.append(data)         # adds data to array
 
     years = []
     ROI = []
@@ -70,7 +73,6 @@ def spx_crawler():
     num = len(allData) -1
     for j in range(0, 12): #removes unneeded strings scraped from web
         allData.pop(num - j)
-
 
     num = len(allData) -1
     for i in range(num, 0, -7):

@@ -8,22 +8,24 @@ import matplotlib.pyplot as plt
 # puts it into a dataframe, then plots it in various ways
 #################################################################
 def merge_and_plot_data():
-    pd.set_option("display.max_rows", 202, "display.max_columns", None) #shows all columns in the dataframes
+    pd.set_option("display.max_rows", 202, "display.max_columns", None) # shows all columns in the dataframes
 
-    df = pd.DataFrame(monthly_btc_crawler(), columns=['month', 'BTCMonthlyChange']) #creates data frame
+    df = pd.DataFrame(monthly_btc_crawler(), columns=['month', 'BTCMonthlyChange']) # creates data frame
     df2 = pd.DataFrame(percent_change_DXY(), columns=['month', 'DXYMonthlyChange'])
 
-    result = pd.merge(df, df2, on='month') #merges the dataframes
+    result = pd.merge(df, df2, on='month') # merges the dataframes
 
     #print(result)
 
-    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange'], kind='line') #plots the data
+    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange'], kind='line') # plots the data as a line graph
     #plt.show()
 
-    #violin plot
-    BTCChange = result.BTCMonthlyChange
+
+
+    BTCChange = result.BTCMonthlyChange # assigns each column to a variable
     DXYChange = result.DXYMonthlyChange
 
+    # violin plots
     fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2)
 
     # Plot violin plot on axes 1
