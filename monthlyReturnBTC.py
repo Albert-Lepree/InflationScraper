@@ -24,9 +24,10 @@ def merge_and_plot_data():
 
     BTCChange = result.BTCMonthlyChange # assigns each column to a variable
     DXYChange = result.DXYMonthlyChange
+    SPXChange = result.SPXMonthlyChange
 
     # violin plots
-    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2)
+    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3)
 
     # Plot violin plot on axes 1
     ax1.violinplot(BTCChange, showmedians=True)
@@ -36,7 +37,11 @@ def merge_and_plot_data():
     ax2.violinplot(DXYChange, showmedians=True)
     ax2.set_title('DXY%Change')
 
-    #plt.show()
+    # Plot violin plot axes 3
+    ax3.violinplot(SPXChange, showmedians=True)
+    ax3.set_title('SPX%Change')
+
+    plt.show()
 
 #################################################################
 # Converts months such as 'october 2017' to 10/17
