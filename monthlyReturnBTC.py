@@ -11,14 +11,14 @@ def merge_and_plot_data():
     pd.set_option("display.max_rows", 202, "display.max_columns", None) # shows all columns in the dataframes
 
     df = pd.DataFrame(monthly_btc_crawler(), columns=['month', 'BTCMonthlyChange']) # creates data frame
-    df2 = pd.DataFrame(percent_change_DXY(), columns=['month', 'DXYMonthlyChange'])
+    df2 = pd.DataFrame(percent_change_CSV(), columns=['month', 'DXYMonthlyChange', 'SPXMonthlyChange'])
 
     result = pd.merge(df, df2, on='month') # merges the dataframes
 
-    #print(result)
+    print(result)
 
-    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange'], kind='line') # plots the data as a line graph
-    #plt.show()
+    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange', 'SPXMonthlyChange'], kind='line') # plots the data as a line graph
+    plt.show()
 
 
 
@@ -153,12 +153,13 @@ def monthly_btc_crawler():
     return data
 
 #################################################################
-# Extracts Data from the 'percentChangeDXY.csv' and transforms it
+# Extracts Data from the 'percentChangeDXY.csv' and 'SP500.csv' then transforms it
 # to be put in the data frame
 #################################################################
-def percent_change_DXY():
+def percent_change_CSV():
 
     DXY_df = pd.read_csv('./percentChangeDXY.csv')
+    SPX_df = pd.read_csv('./SP500.csv')
 
     # Convert the date data to datetime
     dates = pd.Series(DXY_df['DATE'])
@@ -180,7 +181,7 @@ def percent_change_DXY():
 #    plt.xticks(rotation=90)
 #    plt.show()
 
-    data = {'month': month_convertor(DXY_df['month']), "DXYMonthlyChange": DXY_df['DXY%return']}
+    data = {'month': month_convertor(DXY_df['month']), "DXYMonthlyChange": DXY_df['DXY%return'], "SPXMonthlyChange": SPX_df['SP500_PCH']}
 
     return data
 
