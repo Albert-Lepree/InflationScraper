@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 # Gets the data from each crawler and CSV extractor method and
 # puts it into a dataframe, then plots it in various ways
 #################################################################
+import dataSortMethods
+
+
 def merge_and_plot_data():
     pd.set_option("display.max_rows", 202, "display.max_columns", None) # shows all columns in the dataframes
 
@@ -15,16 +18,20 @@ def merge_and_plot_data():
 
     result = pd.merge(df, df2, on='month') # merges the dataframes
 
-    print(result)
+    #print(result)
 
     result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange', 'SPXMonthlyChange'], kind='line') # plots the data as a line graph
-    plt.show()
-
-
+    #plt.show()
 
     BTCChange = result.BTCMonthlyChange # assigns each column to a variable
     DXYChange = result.DXYMonthlyChange
     SPXChange = result.SPXMonthlyChange
+
+    print('Bitcoin: ')
+    dataSortMethods.best_inflation_investment(DXYChange, BTCChange, 2)
+
+    print('SPX: ')
+    dataSortMethods.best_inflation_investment(DXYChange, SPXChange, 2)
 
     # violin plots
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3)
@@ -41,7 +48,7 @@ def merge_and_plot_data():
     ax3.violinplot(SPXChange, showmedians=True)
     ax3.set_title('SPX%Change')
 
-    plt.show()
+    #plt.show()
 
 #################################################################
 # Converts months such as 'october 2017' to 10/17
@@ -135,10 +142,17 @@ def monthly_btc_crawler():
     for i in range(len(array) - 2, 0, -2): # deletes un needed data
         array.pop(i)
 
-    array.pop(0) #pop bottom 4 indexes because they are un needed
+    array.pop(0) #pop bottom 6 indexes because they are un needed
     array.pop(0)
     array.pop(0)
     array.pop(0)
+    array.pop(0)
+    array.pop(0)
+    array.pop(0)
+    array.pop(0)
+    array.pop(0)
+    array.pop(0)
+
 
     month = []
     percent = []

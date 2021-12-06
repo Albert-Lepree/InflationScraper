@@ -57,3 +57,29 @@ def positive_performance(month, percent):
     print(f'Months with a return above 5%: \n {count}')
 
 positive_performance(['Oct', 'Dec', 'Oct', 'Feb', 'March'], [6, 3, 6, 10, 10])
+
+
+#################################################################
+# gets the average %change of the asset when inflation is above
+# x%
+# inflation tracker array (dxy change or CPI change)
+# asset (could be BTC, SPY, housing, etc
+# check (this is the min percent of inflation to check
+#################################################################
+def best_inflation_investment(inflation, asset, check):
+
+    indexArray = []
+    numValues = 0
+    sumValues = 0
+
+    for i in range(0, len(inflation)):
+
+        if inflation[i] >= check:
+            numValues+=1
+            sumValues+=asset[i]
+
+    avg = sumValues/numValues
+
+    print(f'The average return of the asset when inflation is greater than {check}% is {avg}%')
+
+

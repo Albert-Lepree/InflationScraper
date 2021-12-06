@@ -11,15 +11,23 @@ def dataFrame():
     BTCROI = btc_crawler()
     SPXROI = spx_crawler()
 
-    dataSortMethods.similarityAlgo(BTCROI['BTCROI'], SPXROI['SPXROI']) # compares returns of SPX and BTC by positivity
+    #dataSortMethods.similarityAlgo(BTCROI['BTCROI'], SPXROI['SPXROI']) # compares returns of SPX and BTC by positivity
+
+
 
     df = pd.DataFrame(inflation_crawler(), columns=['years', 'InflationRate%']) #creates data frame
     df2 = pd.DataFrame(SPXROI, columns=['years', 'SPXROI'])
     df3 = pd.DataFrame(BTCROI, columns=['years', 'BTCROI'])
 
+
     result = pd.merge(df, df2, on='years') #merges the dataframes
     result = pd.merge(result, df3, on='years')
     #print(result)
+
+    print('SPX: ')
+    dataSortMethods.best_inflation_investment(result['InflationRate%'], result.SPXROI, 2)
+    print('BTC: ')
+    dataSortMethods.best_inflation_investment(result['InflationRate%'], result.BTCROI, 2)
 
     result.plot(x='years', y=['InflationRate%', 'SPXROI', 'BTCROI'], kind='line') #plots the data
     #plt.show()
