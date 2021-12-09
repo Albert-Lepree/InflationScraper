@@ -44,7 +44,7 @@ def least_algo(time, percent):
             least = percent[i]
             least_index = i # saves index to select month to be printed
 
-    print(f'The Highest return was {least}% during the month of {time[least_index]}.')
+    print(f'The Lowest return was {least}% during the month of {time[least_index]}.')
 
 # Returns months that performed better than 5%
 def positive_performance(month, percent):
@@ -55,8 +55,6 @@ def positive_performance(month, percent):
         if percent[i] > 5:
             count[month[i]] += 1
     print(f'Months with a return above 5%: \n {count}')
-
-positive_performance(['Oct', 'Dec', 'Oct', 'Feb', 'March'], [6, 3, 6, 10, 10])
 
 
 #################################################################

@@ -18,20 +18,25 @@ def merge_and_plot_data():
 
     result = pd.merge(df, df2, on='month') # merges the dataframes
 
-    #print(result)
-
-    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange', 'SPXMonthlyChange'], kind='line') # plots the data as a line graph
-    #plt.show()
-
     BTCChange = result.BTCMonthlyChange # assigns each column to a variable
     DXYChange = result.DXYMonthlyChange
     SPXChange = result.SPXMonthlyChange
 
+    print(result)
+    print()
+    print('Bitcoin')
+    dataSortMethods.least_algo(result['month'], result['BTCMonthlyChange'])
+    print('S&P 500')
+    dataSortMethods.least_algo(result['month'], result['SPXMonthlyChange'])
+
+    print()
     print('Bitcoin: ')
     dataSortMethods.best_inflation_investment(DXYChange, BTCChange, 2)
-
     print('SPX: ')
     dataSortMethods.best_inflation_investment(DXYChange, SPXChange, 2)
+
+    result.plot(x='month', y=['BTCMonthlyChange', 'DXYMonthlyChange', 'SPXMonthlyChange'], kind='line') # plots the data as a line graph
+    plt.show()
 
     # violin plots
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3)
@@ -48,7 +53,7 @@ def merge_and_plot_data():
     ax3.violinplot(SPXChange, showmedians=True)
     ax3.set_title('SPX%Change')
 
-    #plt.show()
+    plt.show()
 
 #################################################################
 # Converts months such as 'october 2017' to 10/17
@@ -204,4 +209,3 @@ def percent_change_CSV():
 
     return data
 
-merge_and_plot_data()
